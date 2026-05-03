@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import './utilities.css';
+
+:root {
+  --bg-primary: #050816;
+  --bg-secondary: #090325;
+  --bg-tertiary: #151030;
+  
+  --text-primary: #f3f3f3;
+  --text-secondary: #aaa6c3;
+  --text-muted: #9da5b4;
+  
+  --accent-primary: #00ffff; /* Neon Cyan */
+  --accent-secondary: #915eff; /* Purple */
+  --accent-tertiary: #df4c73; /* Pinkish */
+  --accent-success: #00ff00; /* Neon Green */
+  
+  --glass-bg: rgba(26, 30, 38, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-hero-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(136, 192, 208, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+code, .font-mono {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* Utility Classes handled by utilities.css */
+
+@media (min-width: 640px) {
+  .sm\:flex { display: flex; }
+  .sm\:block { display: block; }
+  .sm\:hidden { display: none; }
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-padding {
+  padding: 100px 10%;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 60px 5%;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
