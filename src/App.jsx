@@ -38,8 +38,14 @@ const App = () => {
     localStorage.setItem('portfolio-guided', guided.toString());
   };
 
+  const toggleGuide = () => {
+    const next = !isGuided;
+    setIsGuided(next);
+    localStorage.setItem('portfolio-guided', next.toString());
+  };
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="relative z-0 bg-primary">
         <AnimatePresence>
           {showOnboarding && (
@@ -48,7 +54,7 @@ const App = () => {
         </AnimatePresence>
         
         <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
-          <Navbar scrolled={scrolled} />
+          <Navbar scrolled={scrolled} isGuided={isGuided} onToggleGuide={toggleGuide} />
           <Hero scrolled={scrolled} />
         </div>
         <About />

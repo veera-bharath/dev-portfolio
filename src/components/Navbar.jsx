@@ -5,7 +5,48 @@ import { Menu, X, Code2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import profileImg from '../assets/profile.png';
 
-const Navbar = ({ scrolled }) => {
+const GuideSwitch = ({ isGuided, onToggle }) => (
+  <button
+    onClick={onToggle}
+    aria-label="Toggle guide mode"
+    style={{
+      position: 'relative',
+      display: 'inline-flex',
+      alignItems: 'center',
+      width: 44,
+      height: 24,
+      borderRadius: 12,
+      border: isGuided ? '1px solid #00ffff' : '1px solid rgba(255,255,255,0.2)',
+      background: isGuided ? 'rgba(0,255,255,0.15)' : 'rgba(255,255,255,0.08)',
+      cursor: 'pointer',
+      transition: 'background 0.25s, border-color 0.25s',
+      flexShrink: 0,
+      outline: 'none',
+      padding: 0,
+    }}
+  >
+    <span
+      style={{
+        position: 'absolute',
+        top: 3,
+        left: 3,
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        background: isGuided ? '#00ffff' : 'rgba(255,255,255,0.35)',
+        transform: isGuided ? 'translateX(20px)' : 'translateX(0)',
+        transition: 'transform 0.25s, background 0.25s',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 10,
+        lineHeight: 1,
+      }}
+    />
+  </button>
+);
+
+const Navbar = ({ scrolled, isGuided, onToggleGuide }) => {
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
 
@@ -36,7 +77,7 @@ const Navbar = ({ scrolled }) => {
           </p>
         </Link>
 
-        <ul className="list-none hidden sm:flex flex-row gap-10">
+        <ul className="list-none hidden sm:flex flex-row gap-10 items-center">
           {navLinks.map((link) => (
             <li
               key={link.id}
@@ -48,6 +89,10 @@ const Navbar = ({ scrolled }) => {
               <a href={`#${link.id}`}>{link.title}</a>
             </li>
           ))}
+          <li className="flex items-center gap-2">
+            <span className="text-[13px] font-mono text-[#d8dee9] select-none">🐝 Guide</span>
+            <GuideSwitch isGuided={isGuided} onToggle={onToggleGuide} />
+          </li>
         </ul>
 
         <div className="sm:hidden flex flex-1 justify-end items-center">
@@ -75,6 +120,10 @@ const Navbar = ({ scrolled }) => {
                   <a href={`#${link.id}`}>{link.title}</a>
                 </li>
               ))}
+              <li className="flex items-center gap-2 pt-1 border-t border-white/10 w-full">
+                <span className="text-[13px] font-mono text-[#d8dee9] select-none">🐝 Guide</span>
+                <GuideSwitch isGuided={isGuided} onToggle={onToggleGuide} />
+              </li>
             </ul>
           </div>
         </div>
