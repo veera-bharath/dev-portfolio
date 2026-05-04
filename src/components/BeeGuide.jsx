@@ -248,48 +248,43 @@ const FloatBubble = ({ text, speaker }) => {
 const HERO_SCRIPT = [
   { speaker: 'dev', text: "Hey! 👋 I'm Veera Bharath.",                              at: 500   },
   { speaker: 'dev', text: "Full-stack dev… .NET, Angular, and a bit of chaos.",      at: 4000  },
-  { speaker: 'dev', text: "I build things that work…",                               at: 7500  },
-  { speaker: 'dev', text: "…and occasionally create bugs that… evolve.",             at: 10800 },
-  { speaker: 'dev', text: "Speaking of which… there's one here.",                   at: 14300 },
-  // bee wakes at 17800ms
-  { speaker: 'bee', text: "…What? Where am I?",                                      at: 18800 },
-  { speaker: 'dev', text: "I need your help — guide the people here.",               at: 22300 },
-  { speaker: 'bee', text: "Wait — no. Not again. 😤",                               at: 26000 },
-  { speaker: 'bee', text: "I'm a bug, not your assistant!",                          at: 29300 },
-  { speaker: 'dev', text: "Do you wanna be de-bugged? 🔧",                           at: 32600 },
-  { speaker: 'bee', text: "...Alright. 😒 You win.",                                at: 36000 },
-  { speaker: 'bee', text: "Hi. I'm Bee.",                                            at: 39300 },
-  { speaker: 'bee', text: "I used to be a bug… but I evolved into a feature.",      at: 42300 },
-  { speaker: 'bee', text: "He's the dev. I'm the reason things are interesting.",   at: 46000 },
-  { speaker: 'dev', text: "That's one way to say it.",                               at: 49500 },
-  { speaker: 'bee', text: "Anyway, I'll guide you through this portfolio.",         at: 52800 },
-  { speaker: 'bee', text: "Projects, tech stack… maybe a few surprises. 👀",        at: 56500 },
-  { speaker: 'bee', text: "Alright. Let's explore. ⬇️",                            at: 60000 },
+  { speaker: 'dev', text: "Hey Bee, wake up! Need your help — guide the people here.", at: 7500 },
+  // bee wakes at 10000ms
+  { speaker: 'bee', text: "…What? Where am I? Wait — no. Not again. 😤",            at: 11000 },
+  { speaker: 'bee', text: "I'm a bug, not your assistant!",                          at: 15000 },
+  { speaker: 'dev', text: "Do you wanna be de-bugged?",                              at: 18500 },
+  { speaker: 'bee', text: "...Alright. 😒  Hi. I'm Bee.",                           at: 22000 },
+  { speaker: 'bee', text: "I used to be a bug… but I evolved into a feature.",      at: 25500 },
+  { speaker: 'bee', text: "He's the dev. I'm the reason things are interesting.",   at: 29000 },
+  { speaker: 'dev', text: ":|",                                                      at: 32500 },
+  { speaker: 'bee', text: "Alright. Let's explore.",                                 at: 35500 },
 ];
 
 const SECTION_SCRIPTS = {
   about: [
-    { speaker: 'bee', text: "He is very humble. 😌",                          at: 500   },
-    { speaker: 'dev', text: "I'm a guy who just likes to build things.",      at: 3000  },
-    { speaker: 'bee', text: "This is where he pretends it's all under control.", at: 5500 },
-    { speaker: 'dev', text: "It IS under control. 🙃",                        at: 8300  },
-    { speaker: 'bee', text: "Sure it is. Now let's see his tech stack! 🔧",   at: 10800 },
+    { speaker: 'bee', text: "He is very humble. 😌",                          at: 2500  },
+    { speaker: 'dev', text: "I'm a guy who just likes to build things.",      at: 6500  },
+    { speaker: 'bee', text: "This is where he pretends it's all under control.", at: 11000 },
+    { speaker: 'dev', text: "It IS under control. 🙃",                        at: 15500 },
+    { speaker: 'bee', text: "Sure it is. Now let's see his tech stack! 🔧",   at: 20000 },
   ],
   tech: [
-    { speaker: 'bee', text: "He primarily speaks C#, JavaScript, SQL...",     at: 500   },
-    { speaker: 'bee', text: "Not sure he knows the remaining ones. 🤔",       at: 3000  },
-    { speaker: 'dev', text: "I know the other things as well!",               at: 5500  },
-    { speaker: 'bee', text: "Yeah. It breaks. You Google. 🔍",                at: 8000  },
-    { speaker: 'bee', text: "Onto his work experience! 💼",                   at: 10500 },
+    { speaker: 'bee', text: "He primarily speaks C#, JavaScript, SQL...",     at: 1500  },
+    { speaker: 'bee', text: "Not sure he knows the remaining ones. 🤔",       at: 4500  },
+    { speaker: 'dev', text: "I know the other things as well!",               at: 7500  },
+    { speaker: 'bee', text: "Yeah. It breaks. You Google.",                   at: 10500 },
+    { speaker: 'dev', text: "That's called being resourceful.",               at: 13500 },
+    { speaker: 'bee', text: "Sure, whatever helps you sleep at night.",       at: 16500 },
+    { speaker: 'bee', text: "Onto his work experience!",                      at: 19500 },
   ],
   experience: [
-    { speaker: 'bee', text: "This is his work experience.",                   at: 500   },
-    { speaker: 'bee', text: "SPOILER ALERT: He survived. 🎉",                 at: 3000  },
-    { speaker: 'dev', text: "I build systems that scale across borders.",     at: 5500  },
-    { speaker: 'bee', text: "Yeah. He builds. Then it breaks in production.", at: 8000  },
-    { speaker: 'dev', text: "Not all — I also debug production issues.",      at: 10500 },
-    { speaker: 'bee', text: "With coffee. Lots of it. ☕",                    at: 13000 },
-    { speaker: 'bee', text: "Now let's see his personal projects! 🛠️",       at: 15500 },
+    { speaker: 'bee', text: "This is his work experience.",                   at: 1500  },
+    { speaker: 'bee', text: "SPOILER ALERT: He survived. 🎉",                 at: 4500  },
+    { speaker: 'dev', text: "I build systems that scale across borders.",     at: 7500  },
+    { speaker: 'bee', text: "Yeah. He builds. Then it breaks in production.", at: 10500 },
+    { speaker: 'dev', text: "Not all — I also debug production issues.",      at: 13500 },
+    { speaker: 'bee', text: "With coffee. Lots of it. ☕",                    at: 16500 },
+    { speaker: 'bee', text: "Now let's see his personal projects! 🛠️",       at: 19500 },
   ],
   projects: [
     { speaker: 'bee', text: "These are his projects. Some are stable...",     at: 500   },
@@ -343,6 +338,17 @@ const BeeGuide = ({ enabled = true }) => {
   const updateSection = useCallback((section) => {
     activeSectionRef.current = section;
     setActiveSection(section);
+    if (section !== 'hero') {
+      heroTimers.current.forEach(clearTimeout);
+      heroTimers.current = [];
+      setHeroDevBubble({ show: false, text: '' });
+      setFloatBubble(s => ({ ...s, show: false }));
+      if (isSleepingRef.current) {
+        isSleepingRef.current = false;
+        justWokeUpRef.current = true;
+        setIsSleeping(false);
+      }
+    }
   }, []);
 
   const stopAutoScroll = useCallback(() => {
@@ -391,13 +397,15 @@ const BeeGuide = ({ enabled = true }) => {
 
     // Wake bee before first bee line
     T(() => {
+      if (activeSectionRef.current !== 'hero') return;
       isSleepingRef.current = false;
       justWokeUpRef.current = true;
       setIsSleeping(false);
-    }, 17800);
+    }, 10000);
 
     HERO_SCRIPT.forEach(({ speaker, text, at }) => {
       T(() => {
+        if (activeSectionRef.current !== 'hero') return;
         if (speaker === 'dev') {
           setHeroDevBubble({ show: true, text });
           setFloatBubble(s => ({ ...s, show: false }));
@@ -408,11 +416,15 @@ const BeeGuide = ({ enabled = true }) => {
       }, at);
     });
 
-    // Hide all after last hero line
+    // Hide all after last hero line, then scroll to about
+    const lastAt = HERO_SCRIPT.at(-1).at;
     T(() => {
       setHeroDevBubble(s => ({ ...s, show: false }));
       setFloatBubble(s => ({ ...s, show: false }));
-    }, HERO_SCRIPT.at(-1).at + 4500);
+    }, lastAt + 2500);
+    T(() => {
+      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+    }, lastAt + 3000);
 
     return () => heroTimers.current.forEach(clearTimeout);
   }, [enabled]);
@@ -433,8 +445,8 @@ const BeeGuide = ({ enabled = true }) => {
 
     script.forEach(({ speaker, text, at }) => {
       T(() => {
-        // About dev lines go near the navbar profile picture
-        if (activeSection === 'about' && speaker === 'dev') {
+        // Dev lines go near the navbar profile picture in all sections
+        if (speaker === 'dev') {
           setNavBubble({ show: true, text });
           setFloatBubble(s => ({ ...s, show: false }));
         } else {
@@ -444,11 +456,18 @@ const BeeGuide = ({ enabled = true }) => {
       }, at);
     });
 
+    const lastAt = script.at(-1).at;
     T(() => {
       setFloatBubble(s => ({ ...s, show: false }));
       setNavBubble(s => ({ ...s, show: false }));
-      startAutoScroll(activeSection);
-    }, script.at(-1).at + 2500);
+    }, lastAt + 2500);
+
+    const nextSection = SECTION_ORDER[SECTION_ORDER.indexOf(activeSection) + 1];
+    if (nextSection) {
+      T(() => {
+        document.getElementById(nextSection)?.scrollIntoView({ behavior: 'smooth' });
+      }, lastAt + 3000);
+    }
 
     return () => sectionTimers.current.forEach(clearTimeout);
   }, [activeSection, isSleeping, enabled, stopAutoScroll, startAutoScroll]);
@@ -507,9 +526,9 @@ const BeeGuide = ({ enabled = true }) => {
         )}
       </AnimatePresence>
 
-      {/* Dev bubble in about — fixed below navbar profile pic */}
+      {/* Dev bubble — fixed below navbar profile pic for all sections */}
       <AnimatePresence>
-        {navBubble.show && activeSection === 'about' && (
+        {navBubble.show && (
           <NavDevBubble key={navBubble.text} text={navBubble.text} />
         )}
       </AnimatePresence>
