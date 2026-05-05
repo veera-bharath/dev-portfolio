@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { projects } from '../constants/data';
-import { Code2, ExternalLink } from 'lucide-react';
+import { Code2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ProjectCard = ({ index, name, description, tags, image, source_code_link }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2, duration: 0.5 }}
-      className="glass-card overflow-hidden group"
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.15, duration: 0.4 }}
+      className="glass-card overflow-hidden group flex-shrink-0"
+      style={{ width: '320px' }}
     >
       <div className="relative w-full h-[230px]">
         <img
@@ -47,7 +48,62 @@ const ProjectCard = ({ index, name, description, tags, image, source_code_link }
   );
 };
 
+const ScrollBtn = ({ onClick, visible, children, side }) => (
+  <button
+    onClick={onClick}
+    style={{
+      position: 'absolute',
+      [side]: '-20px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 10,
+      width: '40px', height: '40px', borderRadius: '50%',
+      background: 'rgba(26,30,38,0.9)',
+      border: '1px solid rgba(255,255,255,0.12)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      cursor: 'pointer', color: '#88c0d0',
+      boxShadow: '0 0 12px rgba(0,255,255,0.15)',
+      transition: 'opacity 0.2s, border-color 0.2s, box-shadow 0.2s',
+      opacity: visible ? 1 : 0,
+      pointerEvents: visible ? 'auto' : 'none',
+    }}
+    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,255,255,0.5)'; e.currentTarget.style.boxShadow = '0 0 18px rgba(0,255,255,0.3)'; }}
+    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = '0 0 12px rgba(0,255,255,0.15)'; }}
+  >
+    {children}
+  </button>
+);
+
 const Projects = () => {
+  const scrollRef = useRef(null);
+  const [canLeft, setCanLeft]   = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // threshold of 32px avoids false-positives from sub-pixel rounding / tiny overflows
+    setCanLeft(el.scrollLeft > 8);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 32);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // ResizeObserver fires after Framer Motion animations settle the card layout
+    const ro = new ResizeObserver(checkScroll);
+    ro.observe(el);
+    el.addEventListener('scroll', checkScroll, { passive: true });
+    return () => {
+      ro.disconnect();
+      el.removeEventListener('scroll', checkScroll);
+    };
+  }, [checkScroll]);
+
+  const scroll = (dir) => {
+    scrollRef.current?.scrollBy({ left: dir * 340, behavior: 'smooth' });
+  };
+
   return (
     <section id="projects" className="section-padding">
       <motion.div
@@ -72,10 +128,24 @@ const Projects = () => {
         </motion.p>
       </div>
 
-      <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-        {projects.map((project, index) => (
-          <ProjectCard key={`project-${index}`} index={index} {...project} />
-        ))}
+      <div className="mt-20 relative">
+        <ScrollBtn onClick={() => scroll(-1)} visible={canLeft} side="left">
+          <ChevronLeft size={18} />
+        </ScrollBtn>
+
+        <div
+          ref={scrollRef}
+          className="flex flex-row gap-6 overflow-x-auto pb-4 projects-scroll"
+          style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+        >
+          {projects.map((project, index) => (
+            <ProjectCard key={`project-${index}`} index={index} {...project} />
+          ))}
+        </div>
+
+        <ScrollBtn onClick={() => scroll(1)} visible={canRight} side="right">
+          <ChevronRight size={18} />
+        </ScrollBtn>
       </div>
     </section>
   );

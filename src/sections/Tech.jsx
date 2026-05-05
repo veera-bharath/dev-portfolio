@@ -32,6 +32,7 @@ const MarqueeRow = ({ items, reverse = false }) => {
       }}
     >
       <div
+        data-bee-marquee="true"
         style={{
           display: 'flex',
           width: 'max-content',

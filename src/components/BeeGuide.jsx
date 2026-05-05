@@ -3,12 +3,14 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ── 3D Bee ────────────────────────────────────────────────────────────────────
-const StylizedBee = ({ isSleepingRef, justWokeUpRef }) => {
-  const beeGroup  = useRef();
-  const leftWing  = useRef();
-  const rightWing = useRef();
-  const eyes      = useRef();
-  const wakeTimer = useRef(0);
+const StylizedBee = ({ isSleepingRef, justWokeUpRef, isStinging, expression }) => {
+  const beeGroup    = useRef();
+  const leftWing    = useRef();
+  const rightWing   = useRef();
+  const eyes        = useRef();
+  const leftBrow    = useRef();
+  const rightBrow   = useRef();
+  const wakeTimer   = useRef(0);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
@@ -34,24 +36,26 @@ const StylizedBee = ({ isSleepingRef, justWokeUpRef }) => {
       leftWing.current.rotation.z  = 0.5 + flutter;
       rightWing.current.rotation.z = -0.5 - flutter;
       const blink = Math.sin(t * 0.2) > 0.98 ? 0.1 : 1;
-      eyes.current.scale.y = blink;
+      const angry = isStinging || expression === 'angry';
+      eyes.current.scale.y = angry ? 0.35 : expression === 'smug' ? 0.55 : blink;
       eyes.current.position.x = Math.sin(t * 2) * 0.02;
     }
+
   });
 
   return (
     <group ref={beeGroup} scale={1.2} position={[0, 0.4, 0]}>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <capsuleGeometry args={[0.35, 0.4, 32, 32]} />
-        <meshStandardMaterial color="#FFD700" roughness={0.1} metalness={0.5} />
+        <meshStandardMaterial color="#FFD700" emissive="#FF8C00" emissiveIntensity={0.6} roughness={0.3} metalness={0.1} />
       </mesh>
       <mesh position={[0, 0, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.36, 0.36, 0.15, 32]} />
-        <meshStandardMaterial color="#111" roughness={0.2} />
+        <meshStandardMaterial color="#1a1a1a" emissive="#000" roughness={0.4} />
       </mesh>
       <mesh position={[0, 0, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.36, 0.36, 0.15, 32]} />
-        <meshStandardMaterial color="#111" roughness={0.2} />
+        <meshStandardMaterial color="#1a1a1a" emissive="#000" roughness={0.4} />
       </mesh>
       <group ref={eyes} position={[0, 0.15, 0.4]}>
         <mesh position={[-0.15, 0, 0]}>
@@ -71,10 +75,30 @@ const StylizedBee = ({ isSleepingRef, justWokeUpRef }) => {
           </mesh>
         </mesh>
       </group>
-      <mesh position={[0, 0.02, 0.48]} rotation={[0, 0, Math.PI]}>
-        <torusGeometry args={[0.06, 0.01, 16, 16, Math.PI]} />
-        <meshBasicMaterial color="#000" />
-      </mesh>
+      {/* Eyebrows — flat when happy, angled V when stinging */}
+      {/* Eyebrows — angled inward when angry */}
+      {(isStinging || expression === 'angry') && <>
+        <mesh ref={leftBrow} position={[-0.13, 0.26, 0.58]} rotation={[0, 0, 0.5]}>
+          <boxGeometry args={[0.12, 0.025, 0.02]} />
+          <meshBasicMaterial color="#000" />
+        </mesh>
+        <mesh ref={rightBrow} position={[0.13, 0.26, 0.58]} rotation={[0, 0, -0.5]}>
+          <boxGeometry args={[0.12, 0.025, 0.02]} />
+          <meshBasicMaterial color="#000" />
+        </mesh>
+      </>}
+      {/* Mouth — smile (happy/smug), flat angry line (angry) */}
+      {(isStinging || expression === 'angry') ? (
+        <mesh position={[0, -0.1, 0.57]}>
+          <boxGeometry args={[0.1, 0.022, 0.02]} />
+          <meshBasicMaterial color="#000" />
+        </mesh>
+      ) : (
+        <mesh position={[0, -0.02, 0.56]} rotation={[0, 0, Math.PI]}>
+          <torusGeometry args={[expression === 'smug' ? 0.04 : 0.05, 0.016, 16, 16, Math.PI]} />
+          <meshBasicMaterial color="#000" />
+        </mesh>
+      )}
       <group position={[0, 0.4, 0.3]}>
         <mesh position={[-0.1, 0, 0]} rotation={[0, 0, 0.3]}>
           <cylinderGeometry args={[0.01, 0.01, 0.2]} />
@@ -250,54 +274,63 @@ const HERO_SCRIPT = [
   { speaker: 'dev', text: "Full-stack dev… .NET, Angular, and a bit of chaos.",      at: 4000  },
   { speaker: 'dev', text: "Hey Bee, wake up! Need your help — guide the people here.", at: 7500 },
   // bee wakes at 10000ms
-  { speaker: 'bee', text: "…What? Where am I? Wait — no. Not again. 😤",            at: 11000 },
-  { speaker: 'bee', text: "I'm a bug, not your assistant!",                          at: 15000 },
+  { speaker: 'bee', text: "…What? Where am I? Wait — no. Not again. 😤",            at: 11000, expression: 'angry'   },
+  { speaker: 'bee', text: "I'm a bug, not your assistant!",                          at: 15000, expression: 'angry'   },
   { speaker: 'dev', text: "Do you wanna be de-bugged?",                              at: 18500 },
-  { speaker: 'bee', text: "...Alright. 😒  Hi. I'm Bee.",                           at: 22000 },
-  { speaker: 'bee', text: "I used to be a bug… but I evolved into a feature.",      at: 25500 },
-  { speaker: 'bee', text: "He's the dev. I'm the reason things are interesting.",   at: 29000 },
+  { speaker: 'bee', text: "...Alright. 😒  Hi. I'm Bee.",                           at: 22000, expression: 'smug'    },
+  { speaker: 'bee', text: "I used to be a bug… but I evolved into a feature.",      at: 25500, expression: 'happy'   },
+  { speaker: 'bee', text: "He's the dev. I'm the reason things are interesting.",   at: 29000, expression: 'smug'    },
   { speaker: 'dev', text: ":|",                                                      at: 32500 },
-  { speaker: 'bee', text: "Alright. Let's explore.",                                 at: 35500 },
+  { speaker: 'bee', text: "Alright. Let's explore.",                                 at: 35500, expression: 'happy'  },
 ];
 
 const SECTION_SCRIPTS = {
   about: [
-    { speaker: 'bee', text: "He is very humble. 😌",                          at: 2500  },
-    { speaker: 'dev', text: "I'm a guy who just likes to build things.",      at: 6500  },
-    { speaker: 'bee', text: "This is where he pretends it's all under control.", at: 11000 },
-    { speaker: 'dev', text: "It IS under control. 🙃",                        at: 15500 },
-    { speaker: 'bee', text: "Sure it is. Now let's see his tech stack! 🔧",   at: 20000 },
+    { speaker: 'bee', text: "He is very humble. 😌",                              at: 2000,  expression: 'smug'  },
+    { speaker: 'dev', text: "I'm a guy who just likes to build things.",          at: 5000  },
+    { speaker: 'bee', text: "This is where he pretends it's all under control.",  at: 8500,  expression: 'smug' },
+    { speaker: 'dev', text: "It IS under control. 🙃",                            at: 12000 },
+    { speaker: 'bee', text: "Sure it is. Anyway — here's what he actually built:", at: 15500, expression: 'happy' },
+    { speaker: 'bee', text: "ASP.NET Core API + MVC for the backend.",            at: 18500, expression: 'happy', highlight: 'service-0' },
+    { speaker: 'bee', text: "Angular on the frontend.",                           at: 21500, expression: 'happy', highlight: 'service-1' },
+    { speaker: 'bee', text: "Windows Services for background processing.",        at: 24500, expression: 'happy', highlight: 'service-2' },
+    { speaker: 'bee', text: "And Clean Architecture to keep it all sane.",        at: 27500, expression: 'smug',  highlight: 'service-3' },
+    { speaker: 'bee', text: "Now let's check out his work experience!",            at: 30500, expression: 'happy' },
   ],
   tech: [
-    { speaker: 'bee', text: "He primarily speaks C#, JavaScript, SQL...",     at: 1500  },
-    { speaker: 'bee', text: "Not sure he knows the remaining ones. 🤔",       at: 4500  },
+    { speaker: 'bee', text: "He primarily speaks C#, JavaScript, SQL...",     at: 1500,  expression: 'happy' },
+    { speaker: 'bee', text: "Not sure he knows the remaining ones. 🤔",       at: 4500,  expression: 'smug'  },
     { speaker: 'dev', text: "I know the other things as well!",               at: 7500  },
-    { speaker: 'bee', text: "Yeah. It breaks. You Google.",                   at: 10500 },
+    { speaker: 'bee', text: "Yeah. It breaks. You Google.",                   at: 10500, expression: 'smug'  },
     { speaker: 'dev', text: "That's called being resourceful.",               at: 13500 },
-    { speaker: 'bee', text: "Sure, whatever helps you sleep at night.",       at: 16500 },
-    { speaker: 'bee', text: "Onto his work experience!",                      at: 19500 },
+    { speaker: 'bee', text: "Sure, whatever helps you sleep at night.",       at: 16500, expression: 'smug'  },
+    { speaker: 'bee', text: "Onto his work experience!",                      at: 19500, expression: 'happy' },
   ],
   experience: [
-    { speaker: 'bee', text: "This is his work experience.",                   at: 1500  },
-    { speaker: 'bee', text: "SPOILER ALERT: He survived. 🎉",                 at: 4500  },
-    { speaker: 'dev', text: "I build systems that scale across borders.",     at: 7500  },
-    { speaker: 'bee', text: "Yeah. He builds. Then it breaks in production.", at: 10500 },
-    { speaker: 'dev', text: "Not all — I also debug production issues.",      at: 13500 },
-    { speaker: 'bee', text: "With coffee. Lots of it. ☕",                    at: 16500 },
-    { speaker: 'bee', text: "Now let's see his personal projects! 🛠️",       at: 19500 },
+    { speaker: 'bee', text: "This is his work experience.",                        at: 1500,  expression: 'happy' },
+    { speaker: 'bee', text: "SPOILER ALERT: He survived. 🎉",                      at: 4500,  expression: 'happy' },
+    { speaker: 'dev', text: "I build systems that scale across borders.",          at: 7500  },
+    { speaker: 'bee', text: "Yeah. He builds. Then it breaks in production.",      at: 10500, expression: 'smug'  },
+    { speaker: 'dev', text: "Not all — I also debug production issues.",           at: 13500 },
+    { speaker: 'bee', text: "With coffee. Lots of it. ☕",                         at: 16500, expression: 'happy' },
+    { speaker: 'bee', text: "Anyway, let me point out a few things...",            at: 19500, expression: 'smug'  },
+    { speaker: 'bee', text: "Migrated a legacy .NET 4.8 app to .NET 9. Allegedly painlessly.",  at: 23000, expression: 'smug', highlight: 'exp-point-0' },
+    { speaker: 'bee', text: "Connected to Interpol. Border security. Casual stuff.", at: 27000, expression: 'happy', highlight: 'exp-point-2' },
+    { speaker: 'bee', text: "Uses AI to ship faster. Even I respect that.",        at: 31000, expression: 'happy', highlight: 'exp-point-3' },
+    { speaker: 'bee', text: "Now onto his projects!",                              at: 34500, expression: 'happy' },
   ],
   projects: [
-    { speaker: 'bee', text: "These are his projects. Some are stable...",     at: 500   },
+    { speaker: 'bee', text: "These are his projects. Some are stable...",     at: 500,   expression: 'happy' },
     { speaker: 'dev', text: "ALL are stable.",                                at: 3000  },
-    { speaker: 'bee', text: "...in development environments. 😅",            at: 5500  },
+    { speaker: 'bee', text: "...in development environments. 😅",            at: 5500,  expression: 'smug'  },
   ],
   contact: [
-    { speaker: 'bee', text: "If you're impressed — hire him. 💼",            at: 500   },
+    { speaker: 'bee', text: "If you're impressed — hire him. 💼",            at: 500,   expression: 'happy' },
     { speaker: 'dev', text: "Or collaborate! 🤝",                             at: 3000  },
-    { speaker: 'bee', text: "Reach him through the options below.",           at: 5500  },
+    { speaker: 'bee', text: "Reach him through the options below.",           at: 5500,  expression: 'happy' },
     { speaker: 'dev', text: "Okay Bee, thanks! Now shoo! 👋",                at: 8000  },
-    { speaker: 'bee', text: "HEY! I will NOT tolerate this! 😡",             at: 10500 },
-    { speaker: 'bee', text: "I might delete this site from existence. 💥",   at: 13000 },
+    { speaker: 'bee', text: "HEY! I will NOT tolerate this! 😡",             at: 10500, expression: 'angry' },
+    { speaker: 'bee', text: "I might delete this site from existence. 💥",   at: 13000, expression: 'angry' },
   ],
 };
 
@@ -317,6 +350,8 @@ const BeeGuide = ({ enabled = true }) => {
   const [activeSection, setActiveSection] = useState('hero');
   const [isSleeping, setIsSleeping]       = useState(true);
   const [isStinging, setIsStinging]       = useState(false);
+  const [expression, setExpression]       = useState('happy');
+  const [activeHighlight, setActiveHighlight] = useState(null);
 
   // Hero dev bubble (fixed near profile image)
   const [heroDevBubble, setHeroDevBubble] = useState({ show: false, text: '' });
@@ -325,15 +360,24 @@ const BeeGuide = ({ enabled = true }) => {
   // About-section dev bubble (below navbar profile pic)
   const [navBubble, setNavBubble]         = useState({ show: false, text: '' });
 
-  const activeSectionRef  = useRef('hero');
-  const isSleepingRef     = useRef(true);
-  const justWokeUpRef     = useRef(false);
-  const heroTimers        = useRef([]);
-  const sectionTimers     = useRef([]);
-  const autoScrollRaf     = useRef(null);
-  const autoScrollActive  = useRef(false);
+  const activeSectionRef       = useRef('hero');
+  const isSleepingRef          = useRef(true);
+  const justWokeUpRef          = useRef(false);
+  const heroTimers             = useRef([]);
+  const sectionTimers          = useRef([]);
+  const autoScrollRaf          = useRef(null);
+  const autoScrollActive       = useRef(false);
+  const currentScriptIdxRef    = useRef(-1);
+  const currentSectionScriptRef = useRef(null);
 
   useEffect(() => { isSleepingRef.current = isSleeping; }, [isSleeping]);
+
+  useEffect(() => {
+    if (!activeHighlight) return;
+    const el = document.querySelector(`[data-bee-id="${activeHighlight}"]`);
+    if (el) el.classList.add('bee-highlight');
+    return () => { if (el) el.classList.remove('bee-highlight'); };
+  }, [activeHighlight]);
 
   const updateSection = useCallback((section) => {
     activeSectionRef.current = section;
@@ -343,11 +387,26 @@ const BeeGuide = ({ enabled = true }) => {
       heroTimers.current = [];
       setHeroDevBubble({ show: false, text: '' });
       setFloatBubble(s => ({ ...s, show: false }));
+      setActiveHighlight(null);
       if (isSleepingRef.current) {
         isSleepingRef.current = false;
         justWokeUpRef.current = true;
         setIsSleeping(false);
       }
+    }
+  }, []);
+
+  const showDialogue = useCallback((speaker, text, expr, hlId) => {
+    if (speaker === 'dev') {
+      setNavBubble({ show: true, text });
+      setFloatBubble(s => ({ ...s, show: false }));
+      setExpression('happy');
+      setActiveHighlight(null);
+    } else {
+      setNavBubble(s => ({ ...s, show: false }));
+      setFloatBubble({ show: true, text, speaker });
+      setExpression(expr || 'happy');
+      setActiveHighlight(hlId || null);
     }
   }, []);
 
@@ -403,15 +462,17 @@ const BeeGuide = ({ enabled = true }) => {
       setIsSleeping(false);
     }, 10000);
 
-    HERO_SCRIPT.forEach(({ speaker, text, at }) => {
+    HERO_SCRIPT.forEach(({ speaker, text, at, expression: expr }) => {
       T(() => {
         if (activeSectionRef.current !== 'hero') return;
         if (speaker === 'dev') {
           setHeroDevBubble({ show: true, text });
           setFloatBubble(s => ({ ...s, show: false }));
+          setExpression('happy');
         } else {
           setFloatBubble({ show: true, text, speaker: 'bee' });
           setHeroDevBubble(s => ({ ...s, show: false }));
+          setExpression(expr || 'happy');
         }
       }, at);
     });
@@ -441,18 +502,15 @@ const BeeGuide = ({ enabled = true }) => {
     stopAutoScroll(); // cancel any scroll from previous section
     const T = (fn, ms) => { const t = setTimeout(fn, ms); sectionTimers.current.push(t); };
 
+    currentScriptIdxRef.current = -1;
+    currentSectionScriptRef.current = script;
+
     setHeroDevBubble(s => ({ ...s, show: false }));
 
-    script.forEach(({ speaker, text, at }) => {
+    script.forEach(({ speaker, text, at, expression: expr, highlight: hlId }, idx) => {
       T(() => {
-        // Dev lines go near the navbar profile picture in all sections
-        if (speaker === 'dev') {
-          setNavBubble({ show: true, text });
-          setFloatBubble(s => ({ ...s, show: false }));
-        } else {
-          setNavBubble(s => ({ ...s, show: false }));
-          setFloatBubble({ show: true, text, speaker });
-        }
+        currentScriptIdxRef.current = idx;
+        showDialogue(speaker, text, expr, hlId);
       }, at);
     });
 
@@ -460,6 +518,7 @@ const BeeGuide = ({ enabled = true }) => {
     T(() => {
       setFloatBubble(s => ({ ...s, show: false }));
       setNavBubble(s => ({ ...s, show: false }));
+      setActiveHighlight(null);
     }, lastAt + 2500);
 
     const nextSection = SECTION_ORDER[SECTION_ORDER.indexOf(activeSection) + 1];
@@ -470,7 +529,93 @@ const BeeGuide = ({ enabled = true }) => {
     }
 
     return () => sectionTimers.current.forEach(clearTimeout);
-  }, [activeSection, isSleeping, enabled, stopAutoScroll, startAutoScroll]);
+  }, [activeSection, isSleeping, enabled, stopAutoScroll, startAutoScroll, showDialogue]);
+
+  // ── Marquee hover detection (tech section) ────────────────────────────────
+  useEffect(() => {
+    if (!enabled || isSleeping || activeSection !== 'tech') return;
+
+    const MSGS = [
+      "Hey… your cursor might be stopping the scroll. 👀",
+      "Did you pause it on purpose or is that accidental chaos?",
+      "The marquee would like to keep moving. Your cursor disagrees.",
+    ];
+    let hoverTimer = null;
+    let shown = false;
+
+    const onEnter = () => {
+      if (shown) return;
+      hoverTimer = setTimeout(() => {
+        if (shown) return;
+        shown = true;
+
+        // Cancel remaining section script timers so they don't overlap
+        sectionTimers.current.forEach(clearTimeout);
+        sectionTimers.current = [];
+
+        // Show hover comment
+        const msg = MSGS[Math.floor(Math.random() * MSGS.length)];
+        setFloatBubble({ show: true, text: msg, speaker: 'bee' });
+        setExpression('smug');
+
+        // After hover message, resume remaining script dialogues
+        const resumeT = setTimeout(() => {
+          setFloatBubble(s => ({ ...s, show: false }));
+
+          const script = currentSectionScriptRef.current;
+          if (!script) return;
+
+          const resumeFrom = currentScriptIdxRef.current + 1;
+          const remaining = script.slice(resumeFrom);
+          if (remaining.length === 0) return;
+
+          let delay = 1000;
+          remaining.forEach(({ speaker, text, expression: expr, highlight: hlId }, relIdx) => {
+            const t = setTimeout(() => {
+              currentScriptIdxRef.current = resumeFrom + relIdx;
+              showDialogue(speaker, text, expr, hlId);
+            }, delay);
+            sectionTimers.current.push(t);
+            delay += 3000;
+          });
+
+          // Clear bubble after last resumed dialogue
+          const clearT = setTimeout(() => {
+            setFloatBubble(s => ({ ...s, show: false }));
+            setNavBubble(s => ({ ...s, show: false }));
+            setActiveHighlight(null);
+          }, delay + 500);
+          sectionTimers.current.push(clearT);
+
+          // Auto-scroll to next section
+          const nextSection = SECTION_ORDER[SECTION_ORDER.indexOf('tech') + 1];
+          if (nextSection) {
+            const scrollT = setTimeout(() => {
+              document.getElementById(nextSection)?.scrollIntoView({ behavior: 'smooth' });
+            }, delay + 1000);
+            sectionTimers.current.push(scrollT);
+          }
+        }, 3500);
+
+        sectionTimers.current.push(resumeT);
+      }, 2000);
+    };
+
+    const onLeave = () => { clearTimeout(hoverTimer); };
+
+    const marquees = document.querySelectorAll('[data-bee-marquee]');
+    marquees.forEach(el => {
+      el.addEventListener('mouseenter', onEnter);
+      el.addEventListener('mouseleave', onLeave);
+    });
+    return () => {
+      clearTimeout(hoverTimer);
+      marquees.forEach(el => {
+        el.removeEventListener('mouseenter', onEnter);
+        el.removeEventListener('mouseleave', onLeave);
+      });
+    };
+  }, [enabled, isSleeping, activeSection, showDialogue]);
 
   // ── Scroll tracking ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -567,11 +712,12 @@ const BeeGuide = ({ enabled = true }) => {
             camera={{ position: [0, 0, 5], fov: 40 }}
           >
             <Suspense fallback={null}>
-              <ambientLight intensity={0.8} />
-              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} />
-              <pointLight position={[-10, -5, -10]} intensity={1} color="#915eff" />
-              <pointLight position={[5, 5, 5]} intensity={1} color="#00ffff" />
-              <StylizedBee isSleepingRef={isSleepingRef} justWokeUpRef={justWokeUpRef} />
+              <ambientLight intensity={1.4} />
+              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={3} castShadow />
+              <pointLight position={[-5, -5, -5]} intensity={1.5} color="#915eff" />
+              <pointLight position={[5, 5, 5]} intensity={2} color="#FFD700" />
+              <pointLight position={[0, 3, 4]} intensity={1.5} color="#ffffff" />
+              <StylizedBee isSleepingRef={isSleepingRef} justWokeUpRef={justWokeUpRef} isStinging={isStinging} expression={expression} />
             </Suspense>
           </Canvas>
         </motion.div>

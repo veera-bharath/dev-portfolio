@@ -116,3 +116,24 @@ code, .font-mono {
 .float-animation {
   animation: float 3s ease-in-out infinite;
 }
+
+@keyframes bee-shine {
+  0%, 100% { box-shadow: 0 0 8px rgba(0,255,255,0.35), inset 0 0 6px rgba(0,255,255,0.05); }
+  50%       { box-shadow: 0 0 24px rgba(0,255,255,0.8), inset 0 0 14px rgba(0,255,255,0.12); }
+}
+.bee-highlight {
+  border: 1px solid rgba(0,255,255,0.85) !important;
+  animation: bee-shine 1.4s ease-in-out infinite;
+}
+/* Marker-style highlight for text/list items */
+li.bee-highlight {
+  border: none !important;
+  animation: none !important;
+  border-left: 3px solid #00ffff !important;
+  padding-left: 8px !important;
+  color: #00ffff !important;
+  font-weight: 600;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.projects-scroll::-webkit-scrollbar { display: none; }

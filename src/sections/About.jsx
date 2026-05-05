@@ -4,6 +4,7 @@ import { services } from '../constants/data';
 
 const ServiceCard = ({ index, title, icon }) => (
   <motion.div
+    data-bee-id={`service-${index}`}
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ delay: index * 0.15, duration: 0.4 }}
