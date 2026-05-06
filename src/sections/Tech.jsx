@@ -69,7 +69,7 @@ const Tech = () => (
       className="text-center mb-20"
     >
       <p className="text-[18px] text-[#88c0d0] font-mono uppercase tracking-widest">My Toolbox</p>
-      <h2 className="text-[50px] font-bold text-white">Technologies.</h2>
+      <h2 className="text-[36px] sm:text-[50px] font-bold text-white">Technologies.</h2>
     </motion.div>
 
     <div className="flex flex-col gap-8">

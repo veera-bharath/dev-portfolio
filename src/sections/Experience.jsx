@@ -39,7 +39,7 @@ const Experience = () => {
         transition={{ duration: 0.5 }}
       >
         <p className="text-[18px] text-[#88c0d0] font-mono uppercase tracking-widest text-center">What I have done so far</p>
-        <h2 className="text-[50px] font-bold text-white text-center">Work Experience.</h2>
+        <h2 className="text-[36px] sm:text-[50px] font-bold text-white text-center">Work Experience.</h2>
       </motion.div>
 
       <div className="mt-20 flex flex-col max-w-4xl mx-auto">

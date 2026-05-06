@@ -112,7 +112,7 @@ const Projects = () => {
         transition={{ duration: 0.5 }}
       >
         <p className="text-[18px] text-[#88c0d0] font-mono uppercase tracking-widest">My work</p>
-        <h2 className="text-[50px] font-bold text-white">Projects.</h2>
+        <h2 className="text-[36px] sm:text-[50px] font-bold text-white">Projects.</h2>
       </motion.div>
 
       <div className="w-full flex">
@@ -128,7 +128,7 @@ const Projects = () => {
         </motion.p>
       </div>
 
-      <div className="mt-20 relative">
+      <div className="mt-20 relative" style={{ padding: '0 24px' }}>
         <ScrollBtn onClick={() => scroll(-1)} visible={canLeft} side="left">
           <ChevronLeft size={18} />
         </ScrollBtn>

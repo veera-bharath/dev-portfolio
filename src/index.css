@@ -137,3 +137,12 @@ li.bee-highlight {
 }
 
 .projects-scroll::-webkit-scrollbar { display: none; }
+
+/* Push hero content below fixed navbar on mobile */
+#hero {
+  padding-top: 70px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  #hero { padding-top: 0; }
+}

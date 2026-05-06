@@ -55,7 +55,7 @@ const Contact = () => {
           transition={{ duration: 0.5 }}
         >
           <p className="text-[18px] text-[#88c0d0] font-mono uppercase tracking-widest">Get in touch</p>
-          <h3 className="text-[50px] font-bold text-white mb-12">Contact.</h3>
+          <h3 className="text-[36px] sm:text-[50px] font-bold text-white mb-12">Contact.</h3>
         </motion.div>
 
         <div className="flex flex-col gap-5 max-w-xl">
@@ -75,7 +75,7 @@ const Contact = () => {
               </div>
               <div>
                 <p className="text-[#9da5b4] font-mono text-xs uppercase tracking-widest mb-1">{label}</p>
-                <p className="text-white font-mono text-[15px]">{value}</p>
+                <p className="text-white font-mono text-[15px] break-words">{value}</p>
               </div>
             </motion.a>
           ))}

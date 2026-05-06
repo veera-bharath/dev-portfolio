@@ -11,8 +11,8 @@ const ServiceCard = ({ index, title, icon }) => (
     whileHover={{ scale: 1.07 }}
     className="flex flex-col items-center gap-3 rounded-2xl border border-white/5 transition-all"
     style={{
-      width: '160px',
-      height: '110px',
+      width: '100%',
+      minHeight: '110px',
       padding: '16px',
       background: '#1a1e26',
       cursor: 'default',
@@ -36,7 +36,7 @@ const About = () => {
             transition={{ duration: 0.5 }}
           >
             <p className="text-[18px] text-[#88c0d0] font-mono uppercase tracking-widest">Introduction</p>
-            <h2 className="text-[50px] font-bold text-white">Overview.</h2>
+            <h2 className="text-[36px] sm:text-[50px] font-bold text-white">Overview.</h2>
           </motion.div>
 
           <motion.p
@@ -52,7 +52,7 @@ const About = () => {
         </div>
       </div>
 
-      <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: 'repeat(4, max-content)', gap: '1.25rem', justifyContent: 'start' }}>
+      <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '1.25rem' }}>
         {services.map((service, index) => (
           <ServiceCard key={service.title} index={index} {...service} />
         ))}
